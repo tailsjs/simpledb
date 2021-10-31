@@ -7,6 +7,10 @@ class DB{
             message: "No params!",
             code: 0
         });
+        if(!params.filename)throw new ParamError({
+            message: "No param \"filename\"!",
+            code: 0
+        });
         if(!params.name)throw new ParamError({
             message: "No param \"name\"!",
             code: 0
