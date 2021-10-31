@@ -1,9 +1,9 @@
-# SimpleDB
+# SimpleDB [ES6]
 Simple JSON database.
 
 ## Example
 ```js
-const DB = require("./index.js");
+import DB from './index.js';
 const db = new DB({
     filename: "db.json",
     name: "users"

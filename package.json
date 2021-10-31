@@ -12,5 +12,6 @@
   },
   "keywords": [],
   "author": "tailsjs",
-  "license": "ISC"
+  "license": "ISC",
+  "type": "module"
 }
