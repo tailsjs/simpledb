@@ -17,21 +17,35 @@ class DB{
         });
         this.filename = params.filename;
         this.name = params.name;
-        if(!fs.existsSync(this.filename)){
+        if(!fs.existsSync(this.filename))
             fs.appendFile(this.filename, '{}', function(error){
                 if(error)throw new DBError({
                     message: error,
                     code: -1
                 })
-            })
+            });
+        this.db = fs.readFileSync(this.filename, "utf8");
+        if(this.db == ""){
+            this.db = {};
+            this.db[params.name] = [];
+            this.write()
         };
-        try{
-            this.db = JSON.parse(fs.readFileSync(this.filename, "utf8"))
-        }catch(e){
-            throw new DBError({
-                message: e,
-                code: -1
-            })
+        if(typeof this.db == "string"){
+            try{
+                this.db = JSON.parse(this.db)
+            }catch(e){
+                if(e instanceof SyntaxError){
+                    throw new DBError({
+                        message: "Database broken.",
+                        code: 3
+                    })
+                }else{
+                    throw new DBError({
+                        message: e,
+                        code: -1
+                    })
+                }
+            }
         };
         if(this.db[params.name] == null){
             this.db[params.name] = [];
@@ -45,6 +59,10 @@ class DB{
         }catch(e){
             this.db[this.name] = [];
             this.write()
+            throw new DBError({
+                message: "Database broken.",
+                code: 3
+            })
         }
     };
 
@@ -95,6 +113,6 @@ class DB{
         this.db[this.name] = this.db[this.name].filter(data => data != result[0]);
         return true
     };
-};
+}
 
 module.exports = DB

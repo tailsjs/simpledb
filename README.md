@@ -1,4 +1,4 @@
-# SimpleDB
+# SimpleDB [CJS]
 Simple JSON database.
 
 ## Example
