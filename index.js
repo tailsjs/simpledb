@@ -1,7 +1,12 @@
 const fs = require("fs");
 const { DBError, ParamError } = require("./errors.js");
-
 class DB{
+    /**
+     * SimpleDB
+     * @param { Object } params (with args)
+     * @param { String } params.filename (db file)
+     * @param { String } params.name (db name)
+     */
     constructor(params){
         if(!params)throw new ParamError({
             message: "No params!",
@@ -52,9 +57,13 @@ class DB{
             this.write()
         }
     };
-
+    /**
+     * Retrieving all entrys.
+     * 
+     * @returns { Array } Array with all entrys
+     */
     get(){
-        try{
+        try{   
             return this.db[this.name]
         }catch(e){
             this.db[this.name] = [];
@@ -65,6 +74,12 @@ class DB{
             })
         }
     };
+    /**
+     * Searching entry by JSON or function
+     * 
+     * @param { JSON | Function } SearchFilter Search key. 
+     * @returns { Array } Array with finded entrys.
+     */
 
     search(params){
         if(!params)throw new ParamError({
@@ -79,7 +94,11 @@ class DB{
             return this.db[this.name].filter(params)
         }
     };
-
+    /**
+     * Writing any changes.
+     * 
+     * @returns { Boolean } If everything good.
+     */
     write(){
         fs.writeFile(this.filename, JSON.stringify(this.db, null, '\t'), function(error){
             if(error)throw new DBError({
@@ -89,7 +108,12 @@ class DB{
             return true
         })
     };
-
+    /**
+     * Adding entry.
+     * 
+     * @param { JSON } JSONEntry 
+     * @returns { JSON } JSONEntry
+     */
     new(json){
         if(typeof json != "object")throw new ParamError({
             message: "No JSON introduced!",
@@ -98,7 +122,12 @@ class DB{
         const result = this.db[this.name].push(json);
         return this.db[this.name][result-1]
     };
-
+    /**
+     * Removing entry by key.
+     * 
+     * @param { JSON | Function } SearchFilter Search key.  
+     * @returns { Boolean }
+     */
     remove(params){
         if(!params)throw new ParamError({
             message: "No params!",
@@ -112,7 +141,6 @@ class DB{
         });
         this.db[this.name] = this.db[this.name].filter(data => data != result[0]);
         return true
-    };
-}
-
+    }
+};
 module.exports = DB
