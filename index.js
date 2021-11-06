@@ -58,9 +58,9 @@ class DB{
         }
     };
     /**
-     * Retrieving all entrys.
+     * Retrieving all entries.
      * 
-     * @returns { Array } Array with all entrys
+     * @returns { Array } Array with all entries
      */
     get(){
         try{   
@@ -77,8 +77,8 @@ class DB{
     /**
      * Searching entry by JSON or function
      * 
-     * @param { JSON | Function } SearchFilter Search key. 
-     * @returns { Array } Array with finded entrys.
+     * @param { Object | Function } SearchFilter Search key. 
+     * @returns { Array } Array with finded entries.
      */
 
     search(params){
@@ -111,8 +111,8 @@ class DB{
     /**
      * Adding entry.
      * 
-     * @param { JSON } JSONEntry 
-     * @returns { JSON } JSONEntry
+     * @param { Object } JSONEntry 
+     * @returns { Object } JSONEntry
      */
     new(json){
         if(typeof json != "object")throw new ParamError({
@@ -125,7 +125,7 @@ class DB{
     /**
      * Removing entry by key.
      * 
-     * @param { JSON | Function } SearchFilter Search key.  
+     * @param { Object | Function } SearchFilter Search key.  
      * @returns { Boolean }
      */
     remove(params){
@@ -141,6 +141,65 @@ class DB{
         });
         this.db[this.name] = this.db[this.name].filter(data => data != result[0]);
         return true
+    };
+    /**
+     * Add some values to all entries if they don't have this value.
+     * 
+     * @param { Object } values The value to add.
+     * @returns { Object } An object with all values ​​and how many were added.
+     */
+    include(values){
+        if(!values)throw new ParamError({
+            message: "No values!",
+            code: 1
+        });
+        if(typeof values != "object")throw new ParamError({
+            message: "Values must be object!",
+            code: 2
+        });
+        let added = {};
+
+        for(let entry of this.db[this.name]){
+            for(let value_name of Object.keys(values)){
+                if(entry[value_name] == null){
+                    if(added[value_name] == null)added[value_name] = 0;
+                    entry[value_name] = values[value_name];
+                    added[value_name]++
+                }
+            }
+        };
+        return added
+    };
+    /**
+     * Clean DB.
+     * 
+     * @returns { Boolean }
+     */
+    clear(){
+        this.db[this.name] = [];
+        this.write();
+        return true
+    };
+    /**
+     * Remove all entries by key.
+     * 
+     * @param { Object | Function } SearchFilter Search key.  
+     * @returns { Number } Amount of removed entries
+     */
+    removeAll(params){
+        if(!params)throw new ParamError({
+            message: "No params!",
+            code: 0
+        });
+
+        let entries = this.search(params),
+            removed = 0;
+
+        for(let entry of entries){
+            this.db[this.name] = this.db[this.name].filter(e => e != entry);
+            removed++
+        };
+        return removed
     }
 };
 module.exports = DB

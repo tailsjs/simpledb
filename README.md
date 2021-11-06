@@ -55,6 +55,23 @@ db.new({
 ```js
 db.remove({ id: 2 }) // true
 ```
+* Add some values to all entries if they don't have this value.
+```js
+db.include({
+    discord: "",
+    minecraft: ""
+}) // { discord: 2, minecraft: 2 }
+```
+* Clear DB.
+```js
+db.clear() // true
+```
+* Remove all entries by key.
+```js
+db.removeAll({
+    activated: false
+}) // 1
+```
 
 ## Some author words
 ### I do not recommend this database for large projects. Better use MySQL, MongoDB, etc.
