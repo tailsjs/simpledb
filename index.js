@@ -149,7 +149,7 @@ class DB{
      * @param { Object } values The value to add.
      * @returns { Object } An object with all values ​​and how many were added.
      */
-     include(values){
+    include(values){
         if(!values)throw new ParamError({
             message: "No values!",
             code: 1
@@ -178,7 +178,6 @@ class DB{
      */
     clear(){
         this.db[this.name] = [];
-        this.write();
         return true
     };
     /**
@@ -187,7 +186,7 @@ class DB{
      * @param { Object | Function } SearchFilter Search key.  
      * @returns { Number } Amount of removed entries
      */
-    removeAll(params){
+    removeKey(params){
         if(!params)throw new ParamError({
             message: "No params!",
             code: 0
@@ -201,6 +200,43 @@ class DB{
             removed++
         };
         return removed
+    }
+    /**
+     * Add some values to all entries with some key if they don't have this value.
+     * 
+     * @param { Object | Function } SearchFilter Search key. 
+     * @param { Object } values The value to add.
+     * @returns { Object } An object with all values ​​and how many were added.
+     */
+     includeKey(searchfilter, values){
+        if(!searchfilter)throw new ParamError({
+            message: "No SearchFilter!",
+            code: 1
+        });
+        if(!values)throw new ParamError({
+            message: "No value!",
+            code: 1
+        });
+        if(typeof values != "object")throw new ParamError({
+            message: "Value must be object!",
+            code: 2
+        });
+        
+
+        let entries = this.search(searchfilter),
+            added = {};
+
+        for(let entry of entries){
+            for(let value_name of Object.keys(values)){
+                if(entry[value_name] == null){
+                    if(added[value_name] == null)added[value_name] = 0;
+                    entry[value_name] = values[value_name];
+                    added[value_name]++
+                }
+            }
+        };
+
+        return added
     }
 };
 
