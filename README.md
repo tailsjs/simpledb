@@ -36,7 +36,7 @@ db.get() // [{...}]
 db.search({ name: "Vlad", lastname: "Stasov" }); // Example of JSON searching. [{ id: 1, name: "Vlad", lastname: "Stasov" ... }]
 db.search(entry => entry.name == "Vlad" && entry.lastname == "Stasov") // Example of arrow function. [{ id: 1, name: "Vlad", lastname: "Stasov" ... }]
 ```
-* Writing any changes.
+* Writing any changes. (Must be used after every post DB request, like as db.new() or db.clear())
 ```js
 user.password = "secretPass<3";
 db.write() // true
@@ -68,9 +68,15 @@ db.clear() // true
 ```
 * Remove all entries by key.
 ```js
-db.removeAll({
+db.removeKey({
     activated: false
 }) // 1
+```
+* Add some values to all entries with some key if they don't have this value.
+```js
+db.includeKey(e => e.activated == true, {
+    twitch: ""
+}) // { twitch: 1 }
 ```
 
 ## Some author words
