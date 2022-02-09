@@ -180,27 +180,6 @@ class DB{
         return true
     };
     /**
-     * Remove all entries by key.
-     * 
-     * @param { Object | Function } SearchFilter Search key.  
-     * @returns { Number } Amount of removed entries
-     */
-    removeKey(params){
-        if(!params)throw new ParamError({
-            message: "No params!",
-            code: 0
-        });
-
-        let entries = this.search(params),
-            removed = 0;
-
-        for(let entry of entries){
-            this.db[this.name] = this.db[this.name].filter(e => e != entry);
-            removed++
-        };
-        return removed
-    }
-    /**
      * Add some values to all entries with some key if they don't have this value.
      * 
      * @param { Object | Function } SearchFilter Search key. 

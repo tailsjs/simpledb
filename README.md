@@ -9,18 +9,16 @@ const db = new DB({
     name: "users"
 });
 let user = {};
-if(db.search({ id: 1 }).length == 0){
+if(db.get().length == 0)
     user = db.new({
         id: 1,
         name: "Denis",
         lastname: "Stasov",
         phonenumber: "89275714852",
-        activated: true
+        activated: false
     });
-    db.write()
-};
 
-user.name = "Vlad";
+user.redeem_code = "tailsjs";
 db.write()
 ```
 ## Need to work:
@@ -65,12 +63,6 @@ db.include({
 * Clear DB.
 ```js
 db.clear() // true
-```
-* Remove all entries by key.
-```js
-db.removeKey({
-    activated: false
-}) // 1
 ```
 * Add some values to all entries with some key if they don't have this value.
 ```js
