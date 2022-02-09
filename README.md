@@ -66,12 +66,6 @@ db.include({
 ```js
 db.clear() // true
 ```
-* Remove all entries by key.
-```js
-db.removeKey({
-    activated: false
-}) // 1
-```
 * Add some values to all entries with some key if they don't have this value.
 ```js
 db.includeKey(e => e.activated == true, {
